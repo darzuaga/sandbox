@@ -2,7 +2,7 @@
   "name": "screenshot",
   "version": "1.0.0",
   "description": "screenshot",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel-node": "babel-node --presets=es2015 --ignore='foo|bar|baz'"
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "parse-domain": "^0.2.1",
     "snyk-resolve-deps": "^1.7.0"
   },
   "devDependencies": {

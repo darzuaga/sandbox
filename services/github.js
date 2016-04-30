@@ -30,10 +30,10 @@ var recursive = require('acorn/dist/walk')
 
 
 var Firebase = require('firebase')
-var githubRef = new Firebase('https://biznobo-sandbox.firebaseio.com/github/users')
+var githubRef = new Firebase('https://biznobo-sandbox.firebaseio.com/')
 var githubEmailRef = new Firebase('https://biznobo-sandbox.firebaseio.com/github/emails')
 
-
+githubRef.set(null)
 
 
 function gol(obj, utils){
