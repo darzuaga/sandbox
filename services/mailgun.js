@@ -86,7 +86,7 @@ function sendEmails(payload){
           var subject = payload.subject
           // console.log('html');
           // console.log(html);
-          var email = siteSnap.val().emails.emailhunter[0].value
+          // var email = siteSnap.val().emails.emailhunter[0].value
           // console.log('email');
           // console.log(email);
           var ref = siteSnap.ref()
