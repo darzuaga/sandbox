@@ -64,9 +64,22 @@ var emails = Rx.Observable.create(function(observer){
 
 function sendEmails(payload){
      return emails.map(function(siteSnap, numOfEmailsSent){
+          var email;
+
+          // console.log('email');
+          var personal_emails = siteSnap.val().emails.emailhunter.filter(email=>email.type == 'personal')
+          // var generic_emails = siteSnap.val().emails.emailhunter.filter(email=>email.type == 'generic')
+          if (personal_emails.length > 0){
+               email = personal_emails[0].value
+               // console.log(email, 'personal');
+          } else {
+               email = siteSnap.val().emails.emailhunter[0].value
+               // console.log(email, 'generic');
+          }
 
 
-          // console.log(email);
+          // console.log('personal_emails');
+          // console.log(generic_emails);
           // var email = siteSnap.email;
           var testSize = payload.size;
           var html = payload.html;
@@ -84,13 +97,14 @@ function sendEmails(payload){
                   .auth('api', 'key-f67521c42fe75366bee0120238a9efee')
                   .type('form')
                   .send({
-                            'from': 'Alex <alex@biznobo.com>',
-                            'to': email,
-                            'subject': subject,
-                            'html': html,
-                            'o:tracking': true,
-                            'o:tracking-clicks':true,
-                            'o:tracking-opens':true
+                       'from': 'Alex <alex@biznobo.com>',
+                    //    'to': email,
+                       'to': '1infiniteloop.end@gmail.com',
+                       'subject': subject,
+                       'html': html,
+                       'o:tracking': true,
+                       'o:tracking-clicks':true,
+                       'o:tracking-opens':true
                   })
                   .end((error, response) => {
                      console.log('email sent to ' + email);
