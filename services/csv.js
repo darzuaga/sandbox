@@ -97,7 +97,7 @@ fbRef.child(esp + "/sites").orderByChild("active").equalTo(true).once('value', f
           //      }
           // }
           // console.log(siteSnap.val().emails.checked);
-          if(siteSnap.val().emails.emailhunter){
+          if(siteSnap.val().emails && siteSnap.val().emails.emailhunter){
                siteSnap.val().emails.emailhunter.map(function(email){
                     // console.log(util.inspect(email, false, null));
                     email.value
@@ -114,8 +114,9 @@ var emailsSource = Rx.Observable.create(function(observer){
           // console.log(snapshot.numChildren());
           // console.log('snapshot');
           snapshot.forEach(function(siteSnap){
-               console.log(siteSnap.val().emails.checked);
-               if(siteSnap.val().emails.checked == false || siteSnap.val().emails.count == 0){
+               console.log('emailsChecked');
+               console.log(siteSnap.val().emails);
+               if(!siteSnap.val().emails || siteSnap.val().emails.checked == false || siteSnap.val().emails.count == 0){
                     observer.next(siteSnap)
                }
           })
@@ -198,8 +199,8 @@ emailsSource.flatMap(function(siteSnap){
      }
      })
 })
-.map(function(res){
-// .subscribe(function(res){
+// .map(function(res){
+.subscribe(function(res){
      // console.log('resBottom');
      // console.log(res);
 
@@ -218,9 +219,6 @@ emailsSource.flatMap(function(siteSnap){
      call.setStrategy(new backoff.ExponentialStrategy());
      call.failAfter(5);
      call.start();
-
-
-
 
 })
 
@@ -374,7 +372,7 @@ sites
 
      // .filter(function(res){return res})
      // .subscribe(function(response){
-     //      console.log(response);
+     //      // console.log(response);
      //      // console.log(Object.keys(response));
      // })
 

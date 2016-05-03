@@ -52,9 +52,10 @@ var emails = Rx.Observable.create(function(observer){
           // console.log('snapshot');
           // var snapshot2 = [{email: '1infiniteloop.end@gmail.com'}, {email: '1infiniteloop.end+2@gmail.com'}]
           snapshot.forEach(function(siteSnap){
-
-               if(siteSnap.val().emails.emailhunter && !siteSnap.val().contacted){
+              console.log('siteSnap');
+               if(siteSnap.val().emails && siteSnap.val().emails.emailhunter && !siteSnap.val().contacted){
                // if(siteSnap){
+                    console.log('sending email');
                     observer.next(siteSnap)
 
                }
@@ -94,10 +95,10 @@ function sendEmails(payload){
           // var generic_emails = siteSnap.val().emails.emailhunter.filter(email=>email.type == 'generic')
           if (personal_emails.length > 0){
                email = personal_emails[0].value
-               // console.log(email, 'personal');
+               console.log(email, 'personal');
           } else {
                email = siteSnap.val().emails.emailhunter[0].value
-               // console.log(email, 'generic');
+               console.log(email, 'generic');
           }
 
           isValid(email).subscribe(valid => {
@@ -183,6 +184,9 @@ function sendEmails(payload){
 
 
 
+            //    } else {
+            //        console.log('else');
+            //         return;
                }
           })
 
@@ -205,6 +209,8 @@ function setEmailParam(html, email) {
 fbRef.child(emailEndpoint).on('child_added', test => {
      var testRef = test.ref();
      var testVal = test.val()
+    //  console.log('testValTop');
+    //  console.log(testVal);
      if(testVal.status !== 'sent'){
           console.log('testVal');
           console.log(testVal);

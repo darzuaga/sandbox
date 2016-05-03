@@ -18,5 +18,7 @@ $('#medium_editor_container').on('submit', (e) => {
     let id = $('#test_id').val()
     let size = $('#test_size').val()
     let payload = {html, subject, id, size}
+    console.log('payload');
+    console.log(payload);
     fbRef.child(`${emailEndpoint}/${id}`).update(payload)
 })
