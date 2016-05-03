@@ -62,6 +62,23 @@ var emails = Rx.Observable.create(function(observer){
      })
 })
 
+function isValid(email){
+     return Rx.Observable.create(observer => {
+          request
+            .get('https://api.mailgun.net/v3/address/validate')
+            .auth('api', 'pubkey-290941eafba03257e14233b628e54968')
+            .type('form')
+            .send({
+                 'address': email
+            })
+            .end((error, response) => {
+                 observer.next(response.body.is_valid)
+            })
+     })
+}
+
+// isValid('1infiniteloop.end@gmail.com')
+
 function sendEmails(payload){
      return emails.map(function(siteSnap, numOfEmailsSent){
           var email;
@@ -77,78 +94,92 @@ function sendEmails(payload){
                // console.log(email, 'generic');
           }
 
+          isValid(email).subscribe(valid => {
+               console.log('isValid');
+               console.log(valid, email);
+               if(valid){
 
-          // console.log('personal_emails');
-          // console.log(generic_emails);
-          // var email = siteSnap.email;
-          var testSize = payload.size;
-          var html = payload.html;
-          var subject = payload.subject
-          // console.log('html');
-          // console.log(html);
-          // var email = siteSnap.val().emails.emailhunter[0].value
-          // console.log('email');
-          // console.log(email);
-          var ref = siteSnap.ref()
-          if(numOfEmailsSent<=testSize){
-               // console.log('gotHere');
-               request
-                  .post('https://api.mailgun.net/v3/conversiontemplates.com/messages')
-                  .auth('api', 'key-f67521c42fe75366bee0120238a9efee')
-                  .type('form')
-                  .send({
-                       'from': 'Alex <alex@biznobo.com>',
-                       'to': email,
-                       'subject': subject,
-                       'html': html,
-                       'o:tracking': true,
-                       'o:tracking-clicks':true,
-                       'o:tracking-opens':true
-                  })
-                  .end((error, response) => {
-                     console.log('email sent to ' + email);
-                     if (error){
-                          var id = moment().unix();
-                          var data = {
-                               'contacted': {
-                                    [id]: {
-                                         'email': email,
-                                         'test_id': id,
-                                         'description': subject,
-                                         'status': 'error'
+
+
+                    // console.log('personal_emails');
+                    // console.log(generic_emails);
+                    // var email = siteSnap.email;
+                    var testSize = payload.size;
+                    var html = payload.html;
+                    var subject = payload.subject
+                    // console.log('html');
+                    // console.log(html);
+                    // var email = siteSnap.val().emails.emailhunter[0].value
+                    // console.log('email');
+                    // console.log(email);
+                    var ref = siteSnap.ref()
+                    if(numOfEmailsSent<=testSize){
+                         // console.log('gotHere');
+                         request
+                            .post('https://api.mailgun.net/v3/conversiontemplates.com/messages')
+                            .auth('api', 'key-f67521c42fe75366bee0120238a9efee')
+                            .type('form')
+                            .send({
+                                 'from': 'Alex <alex@biznobo.com>',
+                                 'to': email,
+                              //    'to': '1infiniteloop.end@gmail.com',
+                                 'subject': subject,
+                                 'html': html,
+                                 'o:tracking': true,
+                                 'o:tracking-clicks':true,
+                                 'o:tracking-opens':true
+                            })
+                            .end((error, response) => {
+                               console.log('email sent to ' + email);
+                               if (error){
+                                    var id = moment().unix();
+                                    var data = {
+                                         'contacted': {
+                                              [id]: {
+                                                   'email': email,
+                                                   'test_id': id,
+                                                   'description': subject,
+                                                   'status': 'error'
+                                              }
+                                         }
                                     }
-                               }
-                          }
-                          console.log('data');
-                          console.log(data);
-                          return error && console.log(error)
-                          siteSnap.ref().update(data)
+                                    console.log('data');
+                                    console.log(data);
+                                    return error && console.log(error)
+                                    siteSnap.ref().update(data)
 
-                     } else {
-                          console.log('numOfEmailsSent');
-                          console.log(numOfEmailsSent);
-                          numOfEmailsSent = numOfEmailsSent+1;
-                          var id = moment().unix();
+                               } else {
+                                    console.log('numOfEmailsSent');
+                                    console.log(numOfEmailsSent);
+                                    numOfEmailsSent = numOfEmailsSent+1;
+                                    var id = moment().unix();
 
-                          var data = {
-                               'contacted': {
-                                    [id]: {
-                                         'email': email,
-                                         'test_id': id,
-                                         'description': subject,
-                                         'status': 'success'
+                                    var data = {
+                                         'contacted': {
+                                              [id]: {
+                                                   'email': email,
+                                                   'test_id': id,
+                                                   'description': subject,
+                                                   'status': 'success'
+                                              }
+                                         }
                                     }
+
+                                    // observer.next(data)
+                                   //  console.log('data');
+                                   //  console.log(data);
+                                    siteSnap.ref().update(data)
                                }
-                          }
 
-                          // observer.next(data)
-                         //  console.log('data');
-                         //  console.log(data);
-                          siteSnap.ref().update(data)
-                     }
+                            })
+                    }
 
-                  })
-          }
+
+
+               }
+          })
+
+
 
      })
 }
