@@ -2,7 +2,8 @@ import editor from 'npm:medium-editor'
 import $ from 'jquery'
 import Firebase from 'firebase'
 var fbRef = new Firebase('https://biznobo-sandbox.firebaseio.com')
-var emailEndpoint = 'email_tests_sandbox'
+var emailEndpoint = 'email_tests'
+// var emailEndpoint = 'email_tests_sandbox'
 
 var email = new editor('#email_body', {
     placeholder: {

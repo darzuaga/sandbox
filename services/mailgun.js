@@ -15,7 +15,8 @@ var Firebase  = require('firebase')
 var githubRef = new Firebase('https://biznobo-sandbox.firebaseio.com/github/users')
 var githubEmailRef = new Firebase('https://biznobo-sandbox.firebaseio.com/github/emails')
 var fbRef = new Firebase('https://biznobo-sandbox.firebaseio.com')
-var emailEndpoint = 'email_tests_sandbox'
+var emailEndpoint = 'email_tests'
+// var emailEndpoint = 'email_tests_sandbox'
 
 var esp = 'getresponse'
 // import moment from 'moment'
@@ -81,7 +82,11 @@ function isValid(email){
 // isValid('1infiniteloop.end@gmail.com')
 
 function sendEmails(payload){
-     return emails.map(function(siteSnap, numOfEmailsSent){
+
+    // var sentOnce = false
+    return emails
+      // .filter(x => !sentOnce)
+      .map(function(siteSnap, numOfEmailsSent){
           var email;
 
           // console.log('email');
@@ -100,7 +105,8 @@ function sendEmails(payload){
                console.log(valid, email);
                if(valid){
 
-
+                //  email = 'mauro@biznobo.com'
+                //  sentOnce = true
 
                     // console.log('personal_emails');
                     // console.log(generic_emails);
@@ -190,7 +196,7 @@ function setEmailParam(html, email) {
   var preppedHTML = html
 
   // Replace the query param with email
-  preppedHTML = preppedHTML.replace('foobar', email)
+  preppedHTML = preppedHTML.replace('foobar', `email=${email}`)
 
   return preppedHTML
 }
