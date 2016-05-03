@@ -98,8 +98,7 @@ function sendEmails(payload){
                   .type('form')
                   .send({
                        'from': 'Alex <alex@biznobo.com>',
-                    //    'to': email,
-                       'to': '1infiniteloop.end@gmail.com',
+                       'to': email,
                        'subject': subject,
                        'html': html,
                        'o:tracking': true,
