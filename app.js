@@ -2,6 +2,7 @@ import editor from 'npm:medium-editor'
 import $ from 'jquery'
 import Firebase from 'firebase'
 var fbRef = new Firebase('https://biznobo-sandbox.firebaseio.com')
+var emailEndpoint = 'email_tests_sandbox'
 
 var email = new editor('#email_body', {
     placeholder: {
@@ -16,5 +17,5 @@ $('#medium_editor_container').on('submit', (e) => {
     let id = $('#test_id').val()
     let size = $('#test_size').val()
     let payload = {html, subject, id, size}
-    fbRef.child(`email_tests/${id}`).update(payload)
+    fbRef.child(`${emailEndpoint}/${id}`).update(payload)
 })

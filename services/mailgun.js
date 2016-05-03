@@ -15,6 +15,7 @@ var Firebase  = require('firebase')
 var githubRef = new Firebase('https://biznobo-sandbox.firebaseio.com/github/users')
 var githubEmailRef = new Firebase('https://biznobo-sandbox.firebaseio.com/github/emails')
 var fbRef = new Firebase('https://biznobo-sandbox.firebaseio.com')
+var emailEndpoint = 'email_tests_sandbox'
 
 var esp = 'getresponse'
 // import moment from 'moment'
@@ -32,7 +33,7 @@ I was curious if you'd like to be able to send emails from Getresponse based on 
 <br>\n\
 I wanted to send you an invite to a free beta tester account. If you’d like to try it out I’ve added the link below, feel free to create an account. <br>\n\
 <br>\n\
-http://unbouncepages.com/biznobo/beta/ <br>\n\
+http://unbouncepages.com/biznobo/beta/<br>\n\
 <br>\n\
 Hope to see you on the other side, <br>\n\
 <br>\n\
@@ -63,20 +64,22 @@ var emails = Rx.Observable.create(function(observer){
 })
 
 function sendEmails(payload){
-     return emails.map(function(siteSnap, numOfEmailsSent){
+    var sentOnce = false
+    return emails.filter(x=>!sentOnce).map(function(siteSnap, numOfEmailsSent){
 
-
+          sentOnce = true
           // console.log(email);
           // var email = siteSnap.email;
           var testSize = payload.size;
-          var html = payload.html;
           var subject = payload.subject
           // console.log('html');
           // console.log(html);
-          var email = siteSnap.val().emails.emailhunter[0].value
+          // var email = siteSnap.val().emails.emailhunter[0].value
+          var html = setEmailParam(payload.html, email);
           // console.log('email');
           // console.log(email);
           var ref = siteSnap.ref()
+
           if(numOfEmailsSent<=testSize){
                // console.log('gotHere');
                request
@@ -100,7 +103,7 @@ function sendEmails(payload){
                                'contacted': {
                                     [id]: {
                                          'email': email,
-                                         'test_id': id,
+                                         'test_id': payload.id,
                                          'description': subject,
                                          'status': 'error'
                                     }
@@ -141,7 +144,17 @@ function sendEmails(payload){
 }
 // .subscribe()
 
-fbRef.child('email_tests').on('child_added', test => {
+function setEmailParam(html, email) {
+  var preppedHTML = html
+
+  // Replace the query param with email
+  preppedHTML = preppedHTML.replace('foobar', email)
+
+  return preppedHTML
+}
+
+
+fbRef.child(emailEndpoint).on('child_added', test => {
      var testRef = test.ref();
      var testVal = test.val()
      if(testVal.status !== 'sent'){
