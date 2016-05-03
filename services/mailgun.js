@@ -23,36 +23,13 @@ var esp = 'getresponse'
 var moment = require('moment')
 
 
-
-
-
-var text =  "Hey <br>\n\
-<br>\n\
-Just wanted to ask you a quick question. I’m Alex from Biznobo. I noticed that you were using Getresponse to follow up with your leads. <br>\n\
-<br>\n\
-I was curious if you'd like to be able to send emails from Getresponse based on actions your visitors have taken such as sending them an email if they leave your checkout page and bring them back? <br>\n\
-<br>\n\
-I wanted to send you an invite to a free beta tester account. If you’d like to try it out I’ve added the link below, feel free to create an account. <br>\n\
-<br>\n\
-http://unbouncepages.com/biznobo/beta/<br>\n\
-<br>\n\
-Hope to see you on the other side, <br>\n\
-<br>\n\
-Alex Meneses <br>\n\
-Co Founder <br>\n\
-Biznobo <br>\n\ "
-
-var subject = 'Quick question';
-
-// var testSize = 1;
-
 var emails = Rx.Observable.create(function(observer){
      fbRef.child(esp + "/sites").orderByChild("active").equalTo(true).once('value', function(snapshot){
           // console.log(snapshot.numChildren());
           // console.log('snapshot');
           // var snapshot2 = [{email: '1infiniteloop.end@gmail.com'}, {email: '1infiniteloop.end+2@gmail.com'}]
           snapshot.forEach(function(siteSnap){
-              console.log('siteSnap');
+            //   console.log('siteSnap');
                if(siteSnap.val().emails && siteSnap.val().emails.emailhunter && !siteSnap.val().contacted){
                // if(siteSnap){
                     console.log('sending email');
@@ -92,6 +69,7 @@ function sendEmails(payload){
 
           // console.log('email');
           var personal_emails = siteSnap.val().emails.emailhunter.filter(email=>email.type == 'personal')
+          console.log('numOfPersonal', personal_emails.length);
           // var generic_emails = siteSnap.val().emails.emailhunter.filter(email=>email.type == 'generic')
           if (personal_emails.length > 0){
                email = personal_emails[0].value
